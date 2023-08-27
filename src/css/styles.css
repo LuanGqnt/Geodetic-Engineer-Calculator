@@ -3,12 +3,16 @@
     font-weight: bold;
 }
 
-#bearings-table {
+#bearing-table table {
     border-spacing: 30px 0;
 }
 
-#bearings-table input {
-    width: 35px;
+#bearing-table input {
+    width: 40px;
+}
+
+.distance-field {
+    width: 80px !important;
 }
 
 th, td {

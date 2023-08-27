@@ -21,7 +21,7 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
           <label htmlFor="degrees">
             <input type="number" name="degrees" value={bearing.degrees} onChange={e => setBearings(bearings.map(bearing_ => {
               if(bearing_.point === bearing.point)
-                return {...bearing, degrees: e.target.value};
+                return {...bearing, degrees: Number(e.target.value)};
               else
                 return bearing_;
             }))} />
@@ -31,7 +31,7 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
           <label htmlFor="minutes">
             <input type="number" name="minutes" value={bearing.minutes} onChange={e => setBearings(bearings.map(bearing_ => {
               if(bearing_.point === bearing.point)
-                return {...bearing, minutes: e.target.value};
+                return {...bearing, minutes: Number(e.target.value)};
               else
                 return bearing_;
             }))} />
@@ -41,7 +41,7 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
           <label htmlFor="seconds">
             <input type="number" name="seconds" value={bearing.seconds} onChange={e => setBearings(bearings.map(bearing_ => {
               if(bearing_.point === bearing.point)
-                return {...bearing, seconds: e.target.value};
+                return {...bearing, seconds: Number(e.target.value)};
               else
                 return bearing_;
             }))} />
@@ -61,7 +61,7 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
 
         <td>
           <label htmlFor="distance">
-              <input type="number" name="distance" value={bearing.distance} onChange={e => setBearings(bearings.map(bearing_ => {
+              <input type="number" name="distance" className="distance-field" value={bearing.distance} onChange={e => setBearings(bearings.map(bearing_ => {
                 if(bearing_.point === bearing.point)
                   return {...bearing, distance: e.target.value};
                 else
@@ -70,6 +70,9 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
               m
           </label>
         </td>
+
+        <td>{bearing.latitude}</td>
+        <td>{bearing.departure}</td>
     </tr>
   );
 }
