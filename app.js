@@ -79,7 +79,7 @@ const calculateArea = (latitudes, dmd) => {
         sum += product;
     });
 
-    return sum / 2;
+    return Math.abs(sum / 2);
 }
 
 const start = new Bearing("n", 81, 2, 0, "e", 301.71);
