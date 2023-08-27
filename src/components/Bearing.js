@@ -1,6 +1,6 @@
 import React from "react";
 
-const Bearing = ({ bearings, setBearings, bearing }) => {
+const Bearing = ({ bearings, setBearings, bearing, resetField, removeField }) => {
   return (
     <tr>
         <td>
@@ -73,6 +73,11 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
 
         <td>{bearing.latitude}</td>
         <td>{bearing.departure}</td>
+
+        <td>
+          <button onClick={() => resetField(bearing.point)}>Reset</button>
+          <button onClick={() => removeField(bearing.point)}>Remove</button>
+        </td>
     </tr>
   );
 }

@@ -28,6 +28,64 @@ const App = () => {
     setBearings([...bearings, newField]);
   }
 
+  const resetField = (pointToReset) => {    
+    setBearings(bearings.map(bearing => {
+      if(bearing.point === pointToReset)
+        return {
+          'point': bearing.point,
+          'directionA': 'n',
+          'degrees': 0,
+          'minutes': 0,
+          'seconds': 0,
+          'directionB': 'e',
+          'distance': 0,
+          'latitude': 0,
+          'departure': 0
+        }
+      else 
+        return bearing;
+    }));
+  }
+
+  const resetAllFields = () => {
+    setBearings(bearings.map(bearing => {
+      return {
+        'point': bearing.point,
+        'directionA': 'n',
+        'degrees': 0,
+        'minutes': 0,
+        'seconds': 0,
+        'directionB': 'e',
+        'distance': 0,
+        'latitude': 0,
+        'departure': 0
+      }
+    }));
+  }
+
+  const removeField = (pointToRemove) => {
+    if(pointToRemove === 0) {
+      alert('You cannot remove that!');
+      return;
+    }
+
+    const updatedBearings = bearings.filter(bearing => bearing.point !== pointToRemove).map(bearing => {
+      if(bearing.point > pointToRemove)
+        return {...bearing, point: bearing.point - 1}
+      else
+        return bearing;
+    });
+
+    setBearings(updatedBearings);
+    setPoint(point - 1);
+
+  }
+
+  const removeAllFields = () => {
+    setPoint(1);
+    setBearings([Object.assign({}, NEWFIELD)]);
+  }
+
   const calculate = () => {    
     setBearings(bearings.map(bearing => {
         const latAndDep_ = latAndDep(bearing);
@@ -40,9 +98,9 @@ const App = () => {
     <>
       <h1>Geodetic Calculator</h1>
 
-      <BearingTable addField={addField} bearings={bearings} setBearings={setBearings} />
+      <BearingTable bearings={bearings} setBearings={setBearings} addField={addField} resetField={resetField} removeField={removeField} resetAllFields={resetAllFields} removeAllFields={removeAllFields} />
 
-      <button onClick={calculate}>Calculate</button>
+      <button id="calculate-button" onClick={calculate}>Calculate</button>
     </>
   );
 }
