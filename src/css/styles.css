@@ -1,0 +1,16 @@
+.point-name {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#bearings-table {
+    border-spacing: 30px 0;
+}
+
+#bearings-table input {
+    width: 35px;
+}
+
+th, td {
+    text-align: center;
+}
