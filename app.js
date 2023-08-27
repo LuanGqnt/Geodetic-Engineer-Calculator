@@ -17,7 +17,7 @@ class Bearing {
     }
 
     bearingToDecimal() {
-        return this.degrees + (this.minutes/60) + (this.seconds/3600);
+        return Number((this.degrees + (this.minutes/60) + (this.seconds/3600)).toFixed(2));
     }
 
     latAndDep() {
@@ -40,7 +40,7 @@ class Bearing {
             departure = -departure;
 
 
-        return [latitude, departure];
+        return [Number(latitude.toFixed(2)), Number(departure.toFixed(2))];
     }
 }
 
@@ -57,7 +57,7 @@ const calculateDMD = departures => {
         } 
 
         const newDMD = dmd[i-1] + departures[i-1] + departures[i];
-        dmd.push(newDMD);
+        dmd.push(Number(newDMD.toFixed(2)));
     }
 
     return dmd;
@@ -71,7 +71,7 @@ const calculateArea = (latitudes, dmd) => {
 
     for(let i = 0; i < latitudes.length; i++) {
         const product = latitudes[i] * dmd[i];
-        products.push(product); 
+        products.push(Number(product.toFixed(2))); 
     }
 
     let sum = 0;
@@ -79,7 +79,7 @@ const calculateArea = (latitudes, dmd) => {
         sum += product;
     });
 
-    return Math.abs(sum / 2);
+    return Number(Math.abs(sum / 2).toFixed(2));
 }
 
 const start = new Bearing("n", 81, 2, 0, "e", 301.71);
