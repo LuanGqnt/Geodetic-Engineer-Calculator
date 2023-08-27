@@ -58,6 +58,18 @@ const Bearing = ({ bearings, setBearings, bearing }) => {
             <option value="w">W</option>
           </select>
         </td>
+
+        <td>
+          <label htmlFor="distance">
+              <input type="number" name="distance" value={bearing.distance} onChange={e => setBearings(bearings.map(bearing_ => {
+                if(bearing_.point === bearing.point)
+                  return {...bearing, distance: e.target.value};
+                else
+                  return bearing_;
+              }))} />
+              m
+          </label>
+        </td>
     </tr>
   );
 }

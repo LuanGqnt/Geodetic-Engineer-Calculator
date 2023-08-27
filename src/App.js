@@ -3,31 +3,23 @@ import Bearing from './components/Bearing';
 
 import './css/styles.css';
 
+const NEWFIELD = {
+  'point': 'start',
+  'directionA': 'n',
+  'degrees': 0,
+  'minutes': 0,
+  'seconds': 0,
+  'directionB': 'e',
+  'distance': 0
+};
+
 const App = () => {
-  const [bearings, setBearings] = useState([
-    {
-      'point': 'start',
-      'directionA': 'n',
-      'degrees': 81,
-      'minutes': 2,
-      'seconds': 0,
-      'directionB': 'e',
-      'distance': 301.71
-    }
-  ]);
+  const [bearings, setBearings] = useState([NEWFIELD]);
   const [point, setPoint] = useState(1);
 
-  const addField = () => {
-    const newField = {
-      'point': '1',
-      'directionA': 'n',
-      'degrees': 0,
-      'minutes': 0,
-      'seconds': 0,
-      'directionB': 'e',
-      'distance': 0
-    }
-    
+  const addField = () => {    
+    const newField = Object.assign({}, NEWFIELD);
+
     newField.point = point;
     setPoint(point + 1);
     setBearings([...bearings, newField]);
@@ -43,6 +35,7 @@ const App = () => {
             <tr>
               <th>Point</th>
               <th>Bearing</th>
+              <th>Distance</th>
             </tr>
           </thead>
 
