@@ -19,7 +19,7 @@ const NEWFIELD = {
 const App = () => {
   const [bearings, setBearings] = useState([Object.assign({}, NEWFIELD)]);
   const [point, setPoint] = useState(1);
-  const [showWarning, setShowWarning] = useState(false);
+  const [warning, setWarning] = useState('');
 
   const addField = () => {    
     const newField = Object.assign({}, NEWFIELD);
@@ -27,7 +27,7 @@ const App = () => {
     newField.point = point;
     setPoint(point + 1);
     setBearings([...bearings, newField]);
-    setShowWarning(false);
+    setWarning('');
   }
 
   const resetField = (pointToReset) => {    
@@ -47,7 +47,7 @@ const App = () => {
       else 
         return bearing;
     }));
-    setShowWarning(false);
+    setWarning('');
   }
 
   const resetAllFields = () => {
@@ -64,7 +64,7 @@ const App = () => {
         'departure': 0
       }
     }));
-    setShowWarning(false);
+    setWarning('');
   }
 
   const removeField = (pointToRemove) => {
@@ -82,13 +82,13 @@ const App = () => {
 
     setBearings(updatedBearings);
     setPoint(point - 1);
-    setShowWarning(false);
+    setWarning('');
   }
 
   const removeAllFields = () => {
     setPoint(1);
     setBearings([Object.assign({}, NEWFIELD)]);
-    setShowWarning(false);
+    setWarning('');
   }
 
   const calculate = () => {    
@@ -113,18 +113,24 @@ const App = () => {
       latitudes.map(x => latitudeSum += x);
       departures.map(x => departureSum += x);
 
-      if(latitudeSum === 0 || departureSum === 0)
-        setShowWarning(false);
+      // if(latitudeSum === 0 && departureSum === 0)
+      //   setShowWarning(false);
+      // else
+      //   setShowWarning(true);
+      if(latitudeSum !== 0)
+        setWarning('Warning: Latitude does not equate to 0!');
+      else if(departureSum !== 0)
+        setWarning('Warning: Departure does not equate to 0!');
       else
-        setShowWarning(true);
+        setWarning('');
   }
 
   return (
     <>
       <h1>Geodetic Calculator</h1>
 
-      <h3 id="warning" className={!showWarning ? 'hide' : ''}>Warning: Latitude / Departure does not equate to 0!</h3>
-      
+      {warning.trim() !== '' ? <h3 id="warning">{warning}</h3> : '' }
+
       <BearingTable bearings={bearings} setBearings={setBearings} addField={addField} resetField={resetField} removeField={removeField} resetAllFields={resetAllFields} removeAllFields={removeAllFields} />
 
       <button id="calculate-button" onClick={calculate}>Calculate</button>

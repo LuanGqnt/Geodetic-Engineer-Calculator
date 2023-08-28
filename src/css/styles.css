@@ -19,12 +19,6 @@ th, td {
     text-align: center;
 }
 
-/* For warning */
 #warning {
     color: red;
 }
-
-.hide {
-    display: none;
-}
-/* For warning */
