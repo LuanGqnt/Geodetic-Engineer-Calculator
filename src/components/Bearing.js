@@ -72,6 +72,7 @@ const Bearing = ({ bearings, setBearings, bearing, resetField, removeField }) =>
         </td>
 
         <td>{bearing.latitude}</td>
+        <td>{bearing.dmd}</td>
         <td>{bearing.departure}</td>
 
         <td>

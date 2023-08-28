@@ -26,7 +26,7 @@ export const latAndDep = (bearing) => {
 
 export const calculateDMD = departures => {
     // delete departures[0]; however, this has adds an <Empty List> when printed
-    departures = departures.splice(1, departures.length); // Removes the unnecessary first departure
+    departures = [...departures].splice(1, departures.length); // Removes the unnecessary first departure
 
     const dmd = [];
 

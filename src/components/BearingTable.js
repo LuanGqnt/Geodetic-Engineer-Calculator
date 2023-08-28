@@ -10,6 +10,7 @@ const BearingTable = ({ bearings, setBearings, addField, resetField, removeField
             <th>Bearing</th>
             <th>Distance</th>
             <th>Latitude</th>
+            <th>DMD</th>
             <th>Departure</th>
           </tr>
         </thead>

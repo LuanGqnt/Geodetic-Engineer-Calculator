@@ -13,7 +13,8 @@ const NEWFIELD = {
   'directionB': 'e',
   'distance': 0,
   'latitude': 0,
-  'departure': 0
+  'departure': 0,
+  'dmd': 0
 };
 
 const App = () => {
@@ -42,7 +43,8 @@ const App = () => {
           'directionB': 'e',
           'distance': 0,
           'latitude': 0,
-          'departure': 0
+          'departure': 0,
+          'dmd': 0
         }
       else 
         return bearing;
@@ -61,7 +63,8 @@ const App = () => {
         'directionB': 'e',
         'distance': 0,
         'latitude': 0,
-        'departure': 0
+        'departure': 0,
+        'dmd': 0
       }
     }));
     setWarning('');
@@ -91,38 +94,59 @@ const App = () => {
     setWarning('');
   }
 
+  const validate = (latitudes, departures) => {
+    let latitudeSum = 0;
+    let departureSum = 0;
+
+    // [...variable] makes a copy of the array. So it doesn't actually effect the original variable
+    const newLatitudes = [...latitudes].splice(1, latitudes.length);
+    const newDepartures = [...departures].splice(1, departures.length);
+
+    newLatitudes.map(x => latitudeSum += x);
+    newDepartures.map(x => departureSum += x);
+
+    if(latitudeSum !== 0) {
+      setWarning('Warning: Latitude does not equate to 0!');
+      return false;
+    } else if(departureSum !== 0) {
+      setWarning('Warning: Departure does not equate to 0!');
+      return false;
+    } else {
+      setWarning('');
+      return true;
+    }
+  }
+
   const calculate = () => {    
     const latitudes = [];
     const departures = [];
+    
+    bearings.forEach(bearing => {
+      // latAndDep_[0] = latitude
+      // latAndDep_[1] = departure
+      const latAndDep_ = latAndDep(bearing);
+      
+      latitudes.push(latAndDep_[0]);
+      departures.push(latAndDep_[1]);
+    });
 
-    setBearings(bearings.map(bearing => {
-        const latAndDep_ = latAndDep(bearing);
+    const valid = validate(latitudes, departures);
 
-        if(bearing.point !== 0) {
-          latitudes.push(latAndDep_[0]);
-          departures.push(latAndDep_[1]);
-        }
-
-        return {...bearing, latitude: latAndDep_[0], departure: latAndDep_[1]}
+    if(valid) {
+      const dmd = calculateDMD(departures);
+    
+      setBearings(bearings.map(bearing => {
+          if(bearing.point === 0)
+            return {...bearing, latitude: latitudes[bearing.point], departure: departures[bearing.point]}
+          
+          return {...bearing, dmd: dmd[bearing.point - 1],  latitude: latitudes[bearing.point], departure: departures[bearing.point]}
+        }));
+    } else {
+      // Not valid, displays the Latitude and Departure but does not display the DMD
+      setBearings(bearings.map(bearing => {
+        return {...bearing, dmd: 0, latitude: latitudes[bearing.point], departure: departures[bearing.point]}
       }));
-
-      // Validates if the sum of the latitudes and departure equates to 0. If not, show a warning
-      let latitudeSum = 0;
-      let departureSum = 0;
-
-      latitudes.map(x => latitudeSum += x);
-      departures.map(x => departureSum += x);
-
-      // if(latitudeSum === 0 && departureSum === 0)
-      //   setShowWarning(false);
-      // else
-      //   setShowWarning(true);
-      if(latitudeSum !== 0)
-        setWarning('Warning: Latitude does not equate to 0!');
-      else if(departureSum !== 0)
-        setWarning('Warning: Departure does not equate to 0!');
-      else
-        setWarning('');
+    }
   }
 
   return (
