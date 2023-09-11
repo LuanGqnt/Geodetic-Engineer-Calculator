@@ -1,6 +1,6 @@
 import React from "react";
 
-const Bearing = ({ bearings, setBearings, bearing, resetField, removeField }) => {
+const BearingField = ({ bearings, setBearings, bearing, resetField, removeField }) => {
   return (
     <tr>
         <td>
@@ -83,4 +83,4 @@ const Bearing = ({ bearings, setBearings, bearing, resetField, removeField }) =>
   );
 }
 
-export default Bearing;
+export default BearingField;

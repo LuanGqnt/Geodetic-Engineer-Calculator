@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BearingTable from './components/BearingTable';
+import AreaTable from './components/AreaTable';
 import { latAndDep, calculateDMD, calculateArea } from './utils/calculator'
 
 import './css/styles.css';
@@ -14,11 +15,99 @@ const NEWFIELD = {
   'distance': 0,
   'latitude': 0,
   'departure': 0,
-  'dmd': 0
+  'dmd': 0,
+  'areaQuotient': 0
 };
 
 const App = () => {
-  const [bearings, setBearings] = useState([Object.assign({}, NEWFIELD)]);
+  // const [bearings, setBearings] = useState([Object.assign({}, NEWFIELD)]);
+  const [bearings, setBearings] = useState([{
+    'point': 0,
+    'directionA': 'n',
+    'degrees': 81,
+    'minutes': 2,
+    'seconds': 0,
+    'directionB': 'e',
+    'distance': 301.71,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0,
+  }, {
+    'point': 1,
+    'directionA': 'n',
+    'degrees': 18,
+    'minutes': 1,
+    'seconds': 0,
+    'directionB': 'e',
+    'distance': 5,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0
+  }, {
+    'point': 2,
+    'directionA': 's',
+    'degrees': 75,
+    'minutes': 7,
+    'seconds': 0,
+    'directionB': 'e',
+    'distance': 10,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0
+  }, {
+    'point': 3,
+    'directionA': 's',
+    'degrees': 75,
+    'minutes': 7,
+    'seconds': 0,
+    'directionB': 'e',
+    'distance': 1.04,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0
+  }, {
+    'point': 4,
+    'directionA': 's',
+    'degrees': 18,
+    'minutes': 1,
+    'seconds': 0,
+    'directionB': 'w',
+    'distance': 5,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0
+  }, {
+    'point': 5,
+    'directionA': 'n',
+    'degrees': 75,
+    'minutes': 7,
+    'seconds': 0,
+    'directionB': 'w',
+    'distance': 1.04,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0
+  }, {
+    'point': 6,
+    'directionA': 'n',
+    'degrees': 75,
+    'minutes': 7,
+    'seconds': 0,
+    'directionB': 'w',
+    'distance': 10,
+    'latitude': 0,
+    'departure': 0,
+    'dmd': 0,
+    'areaQuotient': 0
+  }]);
+  const [area, setArea] = useState(0);
+  const [quotientSum, setQuotientSum] = useState(0);
   const [point, setPoint] = useState(1);
   const [warning, setWarning] = useState('');
 
@@ -29,6 +118,8 @@ const App = () => {
     setPoint(point + 1);
     setBearings([...bearings, newField]);
     setWarning('');
+    setArea(0);
+    setQuotientSum(0);
   }
 
   const resetField = (pointToReset) => {    
@@ -44,12 +135,15 @@ const App = () => {
           'distance': 0,
           'latitude': 0,
           'departure': 0,
-          'dmd': 0
+          'dmd': 0,
+          'areaQuotient': 0
         }
       else 
         return bearing;
     }));
     setWarning('');
+    setArea(0);
+    setQuotientSum(0);
   }
 
   const resetAllFields = () => {
@@ -64,10 +158,13 @@ const App = () => {
         'distance': 0,
         'latitude': 0,
         'departure': 0,
-        'dmd': 0
+        'dmd': 0,
+        'areaQuotient': 0
       }
     }));
     setWarning('');
+    setArea(0);
+    setQuotientSum(0);
   }
 
   const removeField = (pointToRemove) => {
@@ -86,12 +183,16 @@ const App = () => {
     setBearings(updatedBearings);
     setPoint(point - 1);
     setWarning('');
+    setArea(0);
+    setQuotientSum(0);
   }
 
   const removeAllFields = () => {
     setPoint(1);
     setBearings([Object.assign({}, NEWFIELD)]);
     setWarning('');
+    setArea(0);
+    setQuotientSum(0);
   }
 
   const validate = (latitudes, departures) => {
@@ -134,18 +235,31 @@ const App = () => {
 
     if(valid) {
       const dmd = calculateDMD(departures);
-    
+      const areaQuotients = [];
+
       setBearings(bearings.map(bearing => {
-          if(bearing.point === 0)
-            return {...bearing, latitude: latitudes[bearing.point], departure: departures[bearing.point]}
-          
-          return {...bearing, dmd: dmd[bearing.point - 1],  latitude: latitudes[bearing.point], departure: departures[bearing.point]}
-        }));
+        if(bearing.point === 0)
+          return {...bearing, latitude: latitudes[bearing.point], departure: departures[bearing.point]}
+      
+        const newAreaQuotient = Number((dmd[bearing.point - 1] * latitudes[bearing.point]).toFixed(2));
+
+        areaQuotients.push(newAreaQuotient);
+        return {...bearing, dmd: dmd[bearing.point - 1],  latitude: latitudes[bearing.point], departure: departures[bearing.point], areaQuotient: newAreaQuotient}
+      }));
+
+      setArea(calculateArea(latitudes, dmd));
+
+      const sums = areaQuotients.reduce((a, b) => {
+        return a + b;
+      });
+  
+      setQuotientSum(sums);
     } else {
       // Not valid, displays the Latitude and Departure but does not display the DMD
       setBearings(bearings.map(bearing => {
         return {...bearing, dmd: 0, latitude: latitudes[bearing.point], departure: departures[bearing.point]}
       }));
+      setArea(0);
     }
   }
 
@@ -155,8 +269,15 @@ const App = () => {
 
       {warning.trim() !== '' ? <h3 id="warning">{warning}</h3> : '' }
 
-      <BearingTable bearings={bearings} setBearings={setBearings} addField={addField} resetField={resetField} removeField={removeField} resetAllFields={resetAllFields} removeAllFields={removeAllFields} />
+      <BearingTable bearings={bearings} setBearings={setBearings} resetField={resetField} removeField={removeField} />
+      <AreaTable bearings={bearings} area={area} quotientSum={quotientSum} />
 
+      <div className="field-buttons">
+        <button id="add-field" onClick={addField}>Add Field</button>
+        <button id="reset-all-fields" onClick={resetAllFields}>Reset Fields</button>
+        <button id="remove-all-fields" onClick={removeAllFields}>Remove All</button>
+      </div>
+    
       <button id="calculate-button" onClick={calculate}>Calculate</button>
     </>
   );

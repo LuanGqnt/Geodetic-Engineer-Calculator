@@ -45,7 +45,7 @@ export const calculateDMD = departures => {
 
 export const calculateArea = (latitudes, dmd) => {
     // delete departures[0]; however, this has adds an <Empty List> when printed
-    latitudes = latitudes.splice(1, latitudes.length); // Removes the unnecessary first departure
+    latitudes = [...latitudes].splice(1, latitudes.length); // Removes the unnecessary first departure
 
     const products = [];
 

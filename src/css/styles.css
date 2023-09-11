@@ -3,7 +3,7 @@
     font-weight: bold;
 }
 
-#bearing-table table {
+#bearing-table, #area-table {
     border-spacing: 30px 0;
 }
 
