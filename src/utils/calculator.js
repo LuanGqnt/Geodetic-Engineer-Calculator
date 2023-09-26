@@ -61,3 +61,15 @@ export const calculateArea = (latitudes, dmd) => {
 
     return Number(Math.abs(sum / 2).toFixed(2));
 }
+
+export const calculateBLM = (blm, table) => {
+    const blms = [blm];
+
+    for(let i = 0; i < table.length; i++) {
+        const newBLM = blms[i] + table[i];
+        blms.push(Number(newBLM.toFixed(2)));
+    }
+
+    return blms;
+}
+

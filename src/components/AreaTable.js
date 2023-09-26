@@ -16,8 +16,10 @@ const AreaTable = ({ bearings, area, quotientSum }) => {
 
       <tbody>
         {bearings.map(bearing => (
-          bearing.point !== 0 ?
-            <AreaField bearing={bearing} key={'area' + bearing.point} /> : ''
+          bearing.point !== 0 && bearing.point !== '-' ?
+            <AreaField bearing={bearing} key={'area' + bearing.point} /> 
+            : 
+            ''
         ))}
 
         <tr>

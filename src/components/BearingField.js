@@ -61,7 +61,7 @@ const BearingField = ({ bearings, setBearings, bearing, resetField, removeField 
 
         <td>
           <label htmlFor="distance">
-              <input type="number" name="distance" className="distance-field" value={bearing.distance} onChange={e => setBearings(bearings.map(bearing_ => {
+              <input type="number" name="distance" className="long-field" value={bearing.distance} onChange={e => setBearings(bearings.map(bearing_ => {
                 if(bearing_.point === bearing.point)
                   return {...bearing, distance: e.target.value};
                 else
@@ -72,8 +72,39 @@ const BearingField = ({ bearings, setBearings, bearing, resetField, removeField 
         </td>
 
         <td>{bearing.latitude}</td>
+
+        <td>
+          {bearing.point === 0 ? 
+            <label htmlFor="blm1">
+              <input type="number" name="blm1" className="long-field" value={bearing.blm1} onChange={e => setBearings(bearings.map(bearing_ => {
+                if(bearing_.point === bearing.point)
+                  return {...bearing, blm1: e.target.value};
+                else
+                  return bearing_;
+              }))} />
+            </label>
+            :
+            bearing.blm1
+          }
+        </td>
+
         <td>{bearing.dmd}</td>
         <td>{bearing.departure}</td>
+
+        <td>
+          {bearing.point === 0 ? 
+            <label htmlFor="blm2">
+              <input type="number" name="blm2" className="long-field" value={bearing.blm2} onChange={e => setBearings(bearings.map(bearing_ => {
+                if(bearing_.point === bearing.point)
+                  return {...bearing, blm2: e.target.value};
+                else
+                  return bearing_;
+              }))} />
+            </label>
+            :
+            bearing.blm2
+          }
+        </td>
 
         <td>
           <button onClick={() => resetField(bearing.point)}>Reset</button>

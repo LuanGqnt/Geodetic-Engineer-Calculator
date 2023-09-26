@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import BearingTable from './components/BearingTable';
 import AreaTable from './components/AreaTable';
-import { latAndDep, calculateDMD, calculateArea } from './utils/calculator'
+import { latAndDep, calculateDMD, calculateArea, calculateBLM } from './utils/calculator'
 
 import './css/styles.css';
 
@@ -16,7 +16,9 @@ const NEWFIELD = {
   'latitude': 0,
   'departure': 0,
   'dmd': 0,
-  'areaQuotient': 0
+  'areaQuotient': 0,
+  'blm1': 0,
+  'blm2': 0
 };
 
 const App = () => {
@@ -33,6 +35,8 @@ const App = () => {
     'departure': 0,
     'dmd': 0,
     'areaQuotient': 0,
+    'blm1': 18586.77,
+    'blm2': 19376.42
   }, {
     'point': 1,
     'directionA': 'n',
@@ -44,7 +48,9 @@ const App = () => {
     'latitude': 0,
     'departure': 0,
     'dmd': 0,
-    'areaQuotient': 0
+    'areaQuotient': 0,
+    'blm1': 0,
+    'blm2': 0
   }, {
     'point': 2,
     'directionA': 's',
@@ -56,7 +62,9 @@ const App = () => {
     'latitude': 0,
     'departure': 0,
     'dmd': 0,
-    'areaQuotient': 0
+    'areaQuotient': 0,
+    'blm1': 0,
+    'blm2': 0
   }, {
     'point': 3,
     'directionA': 's',
@@ -68,7 +76,9 @@ const App = () => {
     'latitude': 0,
     'departure': 0,
     'dmd': 0,
-    'areaQuotient': 0
+    'areaQuotient': 0,
+    'blm1': 0,
+    'blm2': 0
   }, {
     'point': 4,
     'directionA': 's',
@@ -80,7 +90,9 @@ const App = () => {
     'latitude': 0,
     'departure': 0,
     'dmd': 0,
-    'areaQuotient': 0
+    'areaQuotient': 0,
+    'blm1': 0,
+    'blm2': 0
   }, {
     'point': 5,
     'directionA': 'n',
@@ -92,7 +104,9 @@ const App = () => {
     'latitude': 0,
     'departure': 0,
     'dmd': 0,
-    'areaQuotient': 0
+    'areaQuotient': 0,
+    'blm1': 0,
+    'blm2': 0
   }, {
     'point': 6,
     'directionA': 'n',
@@ -104,8 +118,16 @@ const App = () => {
     'latitude': 0,
     'departure': 0,
     'dmd': 0,
-    'areaQuotient': 0
-  }]);
+    'areaQuotient': 0,
+    'blm1': 0,
+    'blm2': 0
+  },
+  {
+    'point': '-',
+    'blm1': 0,
+    'blm2': 0
+  }
+  ]);
   const [area, setArea] = useState(0);
   const [quotientSum, setQuotientSum] = useState(0);
   const [point, setPoint] = useState(1);
@@ -136,7 +158,9 @@ const App = () => {
           'latitude': 0,
           'departure': 0,
           'dmd': 0,
-          'areaQuotient': 0
+          'areaQuotient': 0,
+          'blm1': 0,
+          'blm2': 0
         }
       else 
         return bearing;
@@ -159,16 +183,19 @@ const App = () => {
         'latitude': 0,
         'departure': 0,
         'dmd': 0,
-        'areaQuotient': 0
+        'areaQuotient': 0,
+        'blm1': 0,
+        'blm2': 0
       }
     }));
+
     setWarning('');
     setArea(0);
     setQuotientSum(0);
   }
 
   const removeField = (pointToRemove) => {
-    if(pointToRemove === 0) {
+    if(pointToRemove === 0 || pointToRemove === '-') {
       alert('You cannot remove that!');
       return;
     }
@@ -225,6 +252,9 @@ const App = () => {
     bearings.forEach(bearing => {
       // latAndDep_[0] = latitude
       // latAndDep_[1] = departure
+      if (bearing.point === '-')
+        return; 
+
       const latAndDep_ = latAndDep(bearing);
       
       latitudes.push(latAndDep_[0]);
@@ -236,15 +266,26 @@ const App = () => {
     if(valid) {
       const dmd = calculateDMD(departures);
       const areaQuotients = [];
+      const allBLM1 = calculateBLM(bearings[0].blm1, latitudes);
+      const allBLM2 = calculateBLM(bearings[0].blm2, departures);
 
       setBearings(bearings.map(bearing => {
         if(bearing.point === 0)
           return {...bearing, latitude: latitudes[bearing.point], departure: departures[bearing.point]}
+        if(bearing.point === '-')
+          return {...bearing, blm1: allBLM1[allBLM1.length - 1], blm2: allBLM2[allBLM2.length - 1]}
       
         const newAreaQuotient = Number((dmd[bearing.point - 1] * latitudes[bearing.point]).toFixed(2));
 
         areaQuotients.push(newAreaQuotient);
-        return {...bearing, dmd: dmd[bearing.point - 1],  latitude: latitudes[bearing.point], departure: departures[bearing.point], areaQuotient: newAreaQuotient}
+        return {
+          ...bearing, dmd: dmd[bearing.point - 1],  
+          latitude: latitudes[bearing.point], 
+          departure: departures[bearing.point], 
+          areaQuotient: newAreaQuotient, 
+          blm1: allBLM1[bearing.point],
+          blm2: allBLM2[bearing.point] 
+         }
       }));
 
       setArea(calculateArea(latitudes, dmd));
